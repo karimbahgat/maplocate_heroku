@@ -4,7 +4,7 @@ from django.http import HttpResponse
 import json
 
 def run_action(request):
-    print('job started')
+    print('job request received')
 
     # get input data as json dict passed through environment variable
     action = request.POST['MAPLOCATE_ACTION']
@@ -14,7 +14,10 @@ def run_action(request):
     print(action,mapid,respond_to,data)
 
     import run_job
-    run_job.run_action(action, mapid, respond_to, **data)
+    #run_job.run_action(action, mapid, respond_to, **data)
+    from threading import Thread
+    thread = Thread(target=run_job.run_action, args=(action, mapid, respond_to), kwargs=data)
+    thread.start()
 
-    print('job finished')
+    print('job request started')
     return HttpResponse('')
