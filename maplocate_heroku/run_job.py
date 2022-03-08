@@ -199,6 +199,9 @@ def download_gazetteer_data():
     zfile = zipfile.ZipFile(dst)
     with zfile.open('gazetteers.db') as infile, open('data/gazetteers.db', 'wb') as outfile:
         shutil.copyfileobj(infile, outfile)
+    print('pwd',os.path.abspath(''))
+    print('listdir',os.listdir(''))
+    print('listdir2',os.listdir('data'))
     # cleanup
     os.remove(dst)
 
@@ -206,11 +209,11 @@ def run_action(action, map_id, respond_to, **kwargs):
     # call the correct function
     # upon completion, submits/adds the data to the maplocate website
 
-    # mark as busy (gets deleted upon fail or completion)
-    with open('busy_file.txt', mode='wb') as fobj:
-        pass
-
     try:
+        # mark as busy (gets deleted upon fail or completion)
+        with open('busy_file.txt', mode='wb') as fobj:
+            pass
+
         if not os.path.lexists('data/gazetteers.db'):
             post_status(respond_to, map_id, 'Processing', 'Fetching gazetteer data, this may take longer than usual...')
             download_gazetteer_data()

@@ -19,6 +19,8 @@ def run_action(request):
 
     # exit early if worker/website is already busy
     # (ie only allow one run_action to run per worker/website)
+    print('pwd',os.path.abspath(''))
+    print('listdir',os.listdir(''))
     if os.path.lexists('busy_file.txt'):
         return HttpResponse(status=503)
 
