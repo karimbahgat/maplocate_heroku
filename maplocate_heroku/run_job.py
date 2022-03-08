@@ -188,6 +188,7 @@ def post_georef(url_host, pk, matched, final, transform, errors, bbox):
 def download_gazetteer_data():
     # Note: assumes all paths are relative to main django repo folder
     # download
+    print('downloading gazetteer data...')
     from urllib.request import urlretrieve
     url = 'https://filedn.com/lvxzpqbRuTkLnAjfFXe7FFu/Gazetteer%20DB/gazetteers%202021-12-03.zip'
     dst = 'data/gazetteers.zip'
@@ -195,12 +196,13 @@ def download_gazetteer_data():
     except: pass
     urlretrieve(url, dst)
     # unzip
+    print('unzipping gazetteer data...')
     import zipfile, shutil
     zfile = zipfile.ZipFile(dst)
     with zfile.open('gazetteers.db') as infile, open('data/gazetteers.db', 'wb') as outfile:
         shutil.copyfileobj(infile, outfile)
     print('pwd',os.path.abspath(''))
-    print('listdir',os.listdir(''))
+    print('listdir',os.listdir(os.path.abspath('')))
     print('listdir2',os.listdir('data'))
     # cleanup
     os.remove(dst)
