@@ -138,9 +138,9 @@ def calculate_errors(controlpoints, transform, imsize, **error_options):
 
 ######################################
 # NOTE: the url_host must be publicly accessible 
-# so that cdsw can post the results on completion.
+# so that the backend can post the results on completion.
 # in the case of local testing must use 
-# `migrate.py runserver 0.0.0.0:port`, and make the device IP
+# `manage.py runserver 0.0.0.0:port`, and make the device IP
 # publicly accessible by forwarding to that port on the wifi router.
 
 def post_status(url_host, pk, status, details):
