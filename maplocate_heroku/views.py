@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
+import os
 import json
 
 @csrf_exempt
@@ -16,6 +17,11 @@ def run_action(request):
     data = json.loads(POST['MAPLOCATE_KWARGS'])
     print(action,mapid,respond_to,data)
 
+    # exit early if worker/website is already busy
+    # (ie only allow one run_action to run per worker/website)
+    if os.path.lexists('busy_file.txt'):
+        return HttpResponse(status=503)
+
     import run_job
     #run_job.run_action(action, mapid, respond_to, **data)
     from threading import Thread
@@ -23,4 +29,4 @@ def run_action(request):
     thread.start()
 
     print('job request started')
-    return HttpResponse('')
+    return HttpResponse(status=200)

@@ -205,7 +205,11 @@ def download_gazetteer_data():
 def run_action(action, map_id, respond_to, **kwargs):
     # call the correct function
     # upon completion, submits/adds the data to the maplocate website
-    result = {}
+
+    # mark as busy (gets deleted upon fail or completion)
+    with open('busy_file.txt', mode='wb') as fobj:
+        pass
+
     try:
         if not os.path.lexists('data/gazetteers.db'):
             post_status(respond_to, map_id, 'Processing', 'Fetching gazetteer data, this may take longer than usual...')
@@ -262,4 +266,6 @@ def run_action(action, map_id, respond_to, **kwargs):
         details = 'Processing error: {}'.format(err)
         post_status(respond_to, map_id, 'Failed', details)
     
+    # mark website as no longer busy
+    os.remove('busy_file.txt')
 
