@@ -240,26 +240,5 @@ def run_action(action, map_id, respond_to, **kwargs):
         print('Exception raised:', err)
         details = 'Processing error: {}'.format(err)
         post_status(respond_to, map_id, 'Failed', details)
-
-if __name__ == '__main__':
-    # this part gets executed when a job is run
-    print('job started')
-
-    # get input data as json dict passed through environment variable
-    action = os.environ['MAPLOCATE_ACTION']
-    mapid = os.environ['MAPLOCATE_MAPID']
-    respond_to = os.environ['MAPLOCATE_HOST']
-    data = json.loads(os.environ['MAPLOCATE_KWARGS'])
-    print(action,mapid,respond_to,data)
-
-    # run the action
-    run_action(action, mapid, respond_to, **data)
-    
-    print('job finished')
-
-
-
-
-
     
 
