@@ -22,7 +22,7 @@ def run_action(request):
     if os.path.lexists('busy_file.txt'):
         return HttpResponse(status=503)
 
-    import run_job
+    from . import run_job
     #run_job.run_action(action, mapid, respond_to, **data)
     from threading import Thread
     thread = Thread(target=run_job.run_action, args=(action, mapid, respond_to), kwargs=data)
