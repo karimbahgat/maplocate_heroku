@@ -185,11 +185,32 @@ def post_georef(url_host, pk, matched, final, transform, errors, bbox):
 
 #####################################
 
+def download_gazetteer_data():
+    # Note: assumes all paths are relative to main django repo folder
+    # download
+    from urllib.request import urlretrieve
+    url = 'https://filedn.com/lvxzpqbRuTkLnAjfFXe7FFu/Gazetteer%20DB/gazetteers%202021-12-03.zip'
+    dst = 'data/gazetteers.zip'
+    try: os.mkdir('data')
+    except: pass
+    urlretrieve(url, dst)
+    # unzip
+    import zipfile, shutil
+    zfile = zipfile.ZipFile(dst)
+    with zfile.open('gazetteers.db') as infile, open('data/gazetteers.db', 'wb') as outfile:
+        shutil.copyfileobj(infile, outfile)
+    # cleanup
+    os.remove(dst)
+
 def run_action(action, map_id, respond_to, **kwargs):
     # call the correct function
     # upon completion, submits/adds the data to the maplocate website
     result = {}
     try:
+        if not os.path.lexists('data/gazetteers.db'):
+            post_status(respond_to, map_id, 'Processing', 'Fetching gazetteer data, this may take longer than usual...')
+            download_gazetteer_data()
+
         iminfo = kwargs.pop('image', {})
         priors = kwargs.pop('priors', {})
 
