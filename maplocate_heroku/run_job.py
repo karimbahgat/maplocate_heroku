@@ -268,6 +268,7 @@ def run_action(action, map_id, respond_to, **kwargs):
         details = 'Processing error: {}'.format(err)
         post_status(respond_to, map_id, 'Failed', details)
     
-    # mark website as no longer busy
-    os.remove('busy_file.txt')
+    finally:
+        # mark website as no longer busy
+        os.remove('busy_file.txt')
 
