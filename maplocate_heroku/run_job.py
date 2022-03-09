@@ -201,9 +201,6 @@ def download_gazetteer_data():
     zfile = zipfile.ZipFile(dst)
     with zfile.open('gazetteers.db') as infile, open('data/gazetteers.db', 'wb') as outfile:
         shutil.copyfileobj(infile, outfile)
-    print('pwd',os.path.abspath(''))
-    print('listdir',os.listdir(os.path.abspath('')))
-    print('listdir2',os.listdir('data'))
     # cleanup
     os.remove(dst)
 
