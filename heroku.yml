@@ -6,8 +6,6 @@ build:
   docker:
     web: Dockerfile
 release:
-  command:
-    - bash ./startup.sh
   image: web
 run:
   web: gunicorn maplocate_heroku.wsgi
