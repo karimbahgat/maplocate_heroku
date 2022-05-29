@@ -21,19 +21,20 @@ RUN apt-get --yes --force-yes install git
 RUN apt-get --yes --force-yes install tesseract-ocr
 
 # install extra langs
-RUN apt-get --yes --force-yes install tesseract-ocr-eng
-RUN apt-get --yes --force-yes install tesseract-ocr-deu
-RUN apt-get --yes --force-yes install tesseract-ocr-fra
-RUN apt-get --yes --force-yes install tesseract-ocr-rus
-RUN apt-get --yes --force-yes install tesseract-ocr-por
-RUN apt-get --yes --force-yes install tesseract-ocr-spa
-RUN apt-get --yes --force-yes install tesseract-ocr-tha
-RUN apt-get --yes --force-yes install tesseract-ocr-tur
-RUN apt-get --yes --force-yes install tesseract-ocr-kor
-RUN apt-get --yes --force-yes install tesseract-ocr-jpn
-RUN apt-get --yes --force-yes install tesseract-ocr-fas
-RUN apt-get --yes --force-yes install tesseract-ocr-equ
-RUN apt-get --yes --force-yes install tesseract-ocr-osd
+RUN apt-get --yes --force-yes install tesseract-ocr-all
+#RUN apt-get --yes --force-yes install tesseract-ocr-eng
+#RUN apt-get --yes --force-yes install tesseract-ocr-deu
+#RUN apt-get --yes --force-yes install tesseract-ocr-fra
+#RUN apt-get --yes --force-yes install tesseract-ocr-rus
+#RUN apt-get --yes --force-yes install tesseract-ocr-por
+#RUN apt-get --yes --force-yes install tesseract-ocr-spa
+#RUN apt-get --yes --force-yes install tesseract-ocr-tha
+#RUN apt-get --yes --force-yes install tesseract-ocr-tur
+#RUN apt-get --yes --force-yes install tesseract-ocr-kor
+#RUN apt-get --yes --force-yes install tesseract-ocr-jpn
+#RUN apt-get --yes --force-yes install tesseract-ocr-fas
+#RUN apt-get --yes --force-yes install tesseract-ocr-equ
+#RUN apt-get --yes --force-yes install tesseract-ocr-osd
 
 # build extra langs from scratch
 #RUN train-lang eng --best
