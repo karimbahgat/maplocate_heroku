@@ -1,6 +1,9 @@
 #FROM jitesoft/tesseract-ocr:4-latest
 FROM python:3.8
 
+# general guideline for heroku+docker+django
+# https://testdriven.io/blog/deploying-django-to-heroku-with-docker/
+
 # set root user
 USER root
 
@@ -13,6 +16,12 @@ COPY . .
 # update apt-get and install some basics
 RUN apt-get update
 RUN apt-get --yes --force-yes install curl
+
+# download gazetteers data
+ARG DATAURL = 'https://filedn.com/lvxzpqbRuTkLnAjfFXe7FFu/Gazetteer%20DB/gazetteers%202021-12-03.zip'
+RUN curl DATAURL --output data/gazetteers.zip
+RUN unzip data/gazetteers.zip -d data
+RUN rm data/gazetteers.zip
 
 # install git
 RUN apt-get --yes --force-yes install git
