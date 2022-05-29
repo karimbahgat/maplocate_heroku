@@ -28,7 +28,7 @@ WORKDIR /app
 COPY . .
 
 # install python
-RUN apt install python3.8
+RUN apt-get --yes --force-yes install python3.8
 
 # install requirements
 RUN pip install -r requirements.txt
