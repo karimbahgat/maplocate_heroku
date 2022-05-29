@@ -7,6 +7,16 @@ USER root
 # set working dir
 WORKDIR /app
 
+# copy over all github repo files
+COPY . .
+
+# update apt-get and install some basics
+RUN apt-get update
+RUN apt-get --yes --force-yes install curl
+
+# install git
+RUN apt-get --yes --force-yes install git
+
 # install tesseract
 RUN apt-get --yes --force-yes install tesseract-ocr
 
@@ -42,16 +52,6 @@ RUN apt-get --yes --force-yes install tesseract-ocr-eng \
 
 # copy extra langs from pretrained github repo
 # https://github.com/tesseract-ocr/tessdata_best
-
-# copy over all github repo files
-COPY . .
-
-# update apt-get and install some basics
-RUN apt-get update
-RUN apt-get --yes --force-yes install curl
-
-# install git
-RUN apt-get --yes --force-yes install git
 
 # install python
 #RUN apt-get --yes --force-yes install python3.8
