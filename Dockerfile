@@ -27,11 +27,13 @@ WORKDIR /app
 # copy over all github repo files
 COPY . .
 
+# update apg-get
+RUN apt-get update
+
 # install git
-RUN apt-get --yes --force-yes install git-all
+RUN apt-get --yes --force-yes install git
 
 # install python
-RUN apt-get update
 RUN apt-get --yes --force-yes install python3.8
 RUN apt-get --yes --force-yes install python3-pip
 
