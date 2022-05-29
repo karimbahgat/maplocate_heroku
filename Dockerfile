@@ -1,4 +1,10 @@
-FROM jitesoft/tesseract-ocr
+FROM jitesoft/tesseract-ocr:4-latest
+
+# set root user
+USER root
+
+# set working dir
+WORKDIR /app
 
 # build extra langs from scratch
 #RUN train-lang eng --best
@@ -17,6 +23,9 @@ FROM jitesoft/tesseract-ocr
 
 # copy extra langs from pretrained github repo
 # https://github.com/tesseract-ocr/tessdata_best
+
+# copy over all github repo files
+COPY . .
 
 # install python
 RUN apt install python3.8
