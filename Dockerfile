@@ -27,8 +27,9 @@ WORKDIR /app
 # copy over all github repo files
 COPY . .
 
-# update apg-get
+# update apt-get and install some basics
 RUN apt-get update
+RUN apt-get --yes --force-yes install curl
 
 # install git
 RUN apt-get --yes --force-yes install git

@@ -5,7 +5,5 @@ setup:
 build:
   docker:
     web: Dockerfile
-release:
-  image: web
 run:
   web: gunicorn maplocate_heroku.wsgi
