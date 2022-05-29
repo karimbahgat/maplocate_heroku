@@ -18,9 +18,11 @@ RUN apt-get update
 RUN apt-get --yes --force-yes install curl
 
 # download gazetteers data
-RUN curl 'https://filedn.com/lvxzpqbRuTkLnAjfFXe7FFu/Gazetteer%20DB/gazetteers%202021-12-03.zip' --output data/gazetteers.zip
-RUN unzip data/gazetteers.zip -d data
-RUN rm data/gazetteers.zip
+WORKDIR data
+ADD 'https://filedn.com/lvxzpqbRuTkLnAjfFXe7FFu/Gazetteer%20DB/gazetteers%202021-12-03.zip' gazetteers.zip
+RUN unzip gazetteers.zip
+RUN rm gazetteers.zip
+WORKDIR /app
 
 # install git
 RUN apt-get --yes --force-yes install git
