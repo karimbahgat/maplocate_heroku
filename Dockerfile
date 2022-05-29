@@ -27,10 +27,17 @@ WORKDIR /app
 # copy over all github repo files
 COPY . .
 
+# install git
+RUN apt-get --yes --force-yes install git-all
+
 # install python
 RUN apt-get update
 RUN apt-get --yes --force-yes install python3.8
 RUN apt-get --yes --force-yes install python3-pip
+
+# install some python stuff for psycopg2
+# https://stackoverflow.com/questions/62715570/failing-to-install-psycopg2-binary-on-new-docker-container
+RUN apt-get --yes install libpq-dev gcc
 
 # install requirements
 RUN pip install -r requirements.txt
