@@ -18,8 +18,7 @@ RUN apt-get update
 RUN apt-get --yes --force-yes install curl
 
 # download gazetteers data
-ARG DATAURL = 'https://filedn.com/lvxzpqbRuTkLnAjfFXe7FFu/Gazetteer%20DB/gazetteers%202021-12-03.zip'
-RUN curl DATAURL --output data/gazetteers.zip
+RUN curl 'https://filedn.com/lvxzpqbRuTkLnAjfFXe7FFu/Gazetteer%20DB/gazetteers%202021-12-03.zip' --output data/gazetteers.zip
 RUN unzip data/gazetteers.zip -d data
 RUN rm data/gazetteers.zip
 
