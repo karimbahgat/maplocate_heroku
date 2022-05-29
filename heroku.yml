@@ -6,4 +6,4 @@ build:
   docker:
     web: Dockerfile
 run:
-  web: gunicorn maplocate_heroku.wsgi
+  web: gunicorn maplocate_heroku.wsgi:application
