@@ -1,10 +1,29 @@
-FROM jitesoft/tesseract-ocr:4-latest
+#FROM jitesoft/tesseract-ocr:4-latest
+FROM python:3.8
 
 # set root user
 USER root
 
 # set working dir
 WORKDIR /app
+
+# install tesseract
+RUN apt-get tesseract-ocr
+
+# install extra langs
+RUN apt-get tesseract-ocr-eng \
+    & apt-get tesseract-ocr-deu \
+    & apt-get tesseract-ocr-fra \
+    & apt-get tesseract-ocr-rus \
+    & apt-get tesseract-ocr-por \
+    & apt-get tesseract-ocr-spa \
+    & apt-get tesseract-ocr-tha \
+    & apt-get tesseract-ocr-tur \
+    & apt-get tesseract-ocr-kor \
+    & apt-get tesseract-ocr-jpn \
+    & apt-get tesseract-ocr-fas \
+    & apt-get tesseract-ocr-equ \
+    & apt-get tesseract-ocr-osd
 
 # build extra langs from scratch
 #RUN train-lang eng --best
@@ -35,7 +54,7 @@ RUN apt-get --yes --force-yes install curl
 RUN apt-get --yes --force-yes install git
 
 # install python
-RUN apt-get --yes --force-yes install python3.8
+#RUN apt-get --yes --force-yes install python3.8
 RUN apt-get --yes --force-yes install python3-pip
 
 # install some python stuff for psycopg2
