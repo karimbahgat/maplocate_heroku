@@ -18,6 +18,8 @@ def detect_toponyms(url, text_options=None, toponym_options=None):
     fobj = io.BytesIO(urlopen(url).read())
     im = Image.open(fobj)
     print(im)
+    w,h = im.size
+    iminfo = {'width':w, 'height':h}
 
     # detect map text
     import maponyms
@@ -29,7 +31,9 @@ def detect_toponyms(url, text_options=None, toponym_options=None):
     # select toponym candidates
     kwargs = toponym_options or {}
     candidate_toponyms = maponyms.main.toponym_selection(im, textdata, **kwargs)
-    return candidate_toponyms
+
+    results = {'image':iminfo, 'toponyms':candidate_toponyms}
+    return results
 
 def match_toponyms(toponyms, **match_options):
     import maponyms
@@ -41,7 +45,7 @@ def match_toponyms(toponyms, **match_options):
     # make into control points
     return matched_toponyms
 
-def estimate_transform(controlpoints, **transform_options):
+def estimate_transform(controlpoints, image=None, **transform_options):
     import transformio as tio
 
     # format the control points as expected by transformio
@@ -78,9 +82,19 @@ def estimate_transform(controlpoints, **transform_options):
             final_controlpoints['features'].append(feat)
     print(final_controlpoints)
     
-    return transdata, final_controlpoints
+    # results
+    results = {'transform':transdata,
+                'controlpoints':final_controlpoints}
+        
+    # calc bbox if image is given
+    if image:
+        imsize = image['width'],image['height']
+        bbox = tio.imwarp.imbounds(*imsize, trans)
+        results['bbox'] = bbox
 
-def calculate_errors(controlpoints, transform, imsize, **error_options):
+    return results
+
+def calculate_errors(controlpoints, transform, image=None, **error_options):
     import transformio as tio
     import math
 
@@ -122,18 +136,20 @@ def calculate_errors(controlpoints, transform, imsize, **error_options):
     errs['pixel']['rmse'] = tio.accuracy.RMSE(resids_colrow)
     errs['pixel']['max'] = tio.accuracy.MAX(resids_colrow)
     # then percent (of image pixel dims)
-    errs['percent'] = {}
-    diag = math.hypot(*imsize)
-    img_radius = float(diag/2.0) # percent of half the max dist (from img center to corner)
-    errs['percent']['mae'] = (errs['pixel']['mae'] / img_radius) * 100.0
-    errs['percent']['rmse'] = (errs['pixel']['mae'] / img_radius) * 100.0
-    errs['percent']['max'] = (errs['pixel']['max'] / img_radius) * 100.0
+    if image:
+        imsize = image['width'],image['height']
+        errs['percent'] = {}
+        diag = math.hypot(*imsize)
+        img_radius = float(diag/2.0) # percent of half the max dist (from img center to corner)
+        errs['percent']['mae'] = (errs['pixel']['mae'] / img_radius) * 100.0
+        errs['percent']['rmse'] = (errs['pixel']['mae'] / img_radius) * 100.0
+        errs['percent']['max'] = (errs['pixel']['max'] / img_radius) * 100.0
 
-    # add percent residual to gcps_final_info
-    for f in controlpoints['features']:
-        pixres = f['properties']['origresidual']
-        percerr = (pixres / img_radius) * 100.0
-        f['properties']['percresidual'] = percerr
+        # add percent residual to gcps_final_info
+        for f in controlpoints['features']:
+            pixres = f['properties']['origresidual']
+            percerr = (pixres / img_radius) * 100.0
+            f['properties']['percresidual'] = percerr
 
     return errs
 
@@ -202,8 +218,12 @@ def run_action(action, map_id, respond_to, **kwargs):
             # post status
             post_status(respond_to, map_id, 'Processing', 'Performing toponym text label detection...')
             # get results
-            toponyms = detect_toponyms(kwargs['url'], kwargs.get('text_options',{}), kwargs.get('toponym_options',{}))
+            results = detect_toponyms(kwargs['url'], kwargs.get('text_options',{}), kwargs.get('toponym_options',{}))
+            toponyms = results['toponyms']
             print(toponyms)
+            # get image info if not already provided
+            if not iminfo:
+                iminfo = results['image']
             # post toponyms
             post_toponyms(respond_to, map_id, toponyms)
 
@@ -230,12 +250,9 @@ def run_action(action, map_id, respond_to, **kwargs):
             # post status
             post_status(respond_to, map_id, 'Processing', 'Estimating transformation...')
             # get results
-            transform,final = estimate_transform(matched, **kwargs.get('transform_options', {}) )
-            imsize = iminfo['width'],iminfo['height']
-            errors = calculate_errors(final, transform, imsize)
-            import transformio as tio
-            trans = tio.transforms.from_json(transform)
-            bbox = tio.imwarp.imbounds(*imsize, trans)
+            results = estimate_transform(matched, image=iminfo, **kwargs.get('transform_options', {}) )
+            transform,final,bbox = results['transform'], results['controlpoints'], results['bbox']
+            errors = calculate_errors(final, transform, image=iminfo)
             print(2, transform, errors)
             # post transform
             post_georef(respond_to, map_id, matched, final, transform, errors, bbox)
