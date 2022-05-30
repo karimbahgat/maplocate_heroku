@@ -27,6 +27,9 @@ RUN pip install -r requirements.txt
 
 # download gazetteers data
 WORKDIR data
-ADD 'https://filedn.com/lvxzpqbRuTkLnAjfFXe7FFu/Gazetteer%20DB/gazetteers%202021-12-03.zip' gazetteers.zip
-RUN unzip gazetteers.zip
-RUN rm gazetteers.zip
+RUN curl -o gazetteers.zip https://filedn.com/lvxzpqbRuTkLnAjfFXe7FFu/Gazetteer%20DB/gazetteers%202021-12-03.zip \
+    && unzip gazetteers.zip \
+    && rm gazetteers.zip
+
+# set back to main dir
+WORKDIR /app
