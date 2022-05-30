@@ -66,6 +66,7 @@ def estimate_transform(controlpoints, **transform_options):
     # switch to forward transform
     trans = backtrans.inverse()
     transdata = trans.to_json()
+    print(transdata)
 
     # create the final reduced set of controlpoints geojson
     print(frompoints)

@@ -44,7 +44,7 @@ def api_action(request):
         kwargs = json.loads(request.body)
     else:
         print('api POST', request.POST)
-        kwargs = json.loads(request.POST.copy())
+        kwargs = request.POST.copy()
     print('kwargs', kwargs)
 
     # exit early if worker/website is already busy
@@ -75,4 +75,4 @@ def api_action(request):
         # mark website as no longer busy
         os.remove('busy_file.txt')
 
-    return JsonResponse(results, status=200)
+    return JsonResponse(results, status=200, safe=False)

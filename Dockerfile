@@ -19,7 +19,7 @@ RUN apt-get --yes --force-yes install curl
 
 # download gazetteers data
 WORKDIR data
-ADD 'https://filedn.com/lvxzpqbRuTkLnAjfFXe7FFu/Gazetteer%20DB/gazetteers%202021-12-03.zip' gazetteers.zip
+ADD 'https://filedn.com/lvxzpqbRuTkLnAjfFXe7FFu/Gazetteer%20DB/gazetteers%202022-05-30.zip' gazetteers.zip
 RUN unzip gazetteers.zip
 RUN rm gazetteers.zip
 WORKDIR /app
