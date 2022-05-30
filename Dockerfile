@@ -13,15 +13,13 @@ WORKDIR /app
 # copy over all github repo files
 COPY . .
 
-# update apt-get and install some basics
-RUN apt-get update \
-    & apt-get --yes --force-yes install curl \
-    & apt-get --yes --force-yes install git \
-    & apt-get --yes --force-yes install tesseract-ocr \
-    & apt-get --yes --force-yes install python3-pip
-
-# install langs separately to avoid lock conflict
-RUN apt-get --yes --force-yes install tesseract-ocr-all
+# update apt-get and install req packages
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    tesseract-ocr \
+    tesseract-ocr-all \
+    python3-pip
 
 # install requirements
 RUN pip install -r requirements.txt
