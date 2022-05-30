@@ -16,6 +16,7 @@ COPY . .
 # update apt-get and install req packages
 RUN apt-get update && apt-get install -y \
     curl \
+    unzip \
     git \
     tesseract-ocr \
     tesseract-ocr-all \
