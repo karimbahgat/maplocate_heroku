@@ -25,11 +25,9 @@ RUN apt-get update && apt-get install -y \
 # install requirements
 RUN pip install -r requirements.txt
 
-# download gazetteers data
+# download mysql gazetteer ssl certificate
 WORKDIR data
-RUN curl -o gazetteers.zip https://filedn.com/lvxzpqbRuTkLnAjfFXe7FFu/Gazetteer%20DB/gazetteers%202022-05-31.zip \
-    && unzip gazetteers.zip \
-    && rm gazetteers.zip
+RUN curl -o azure-mysql-DigiCertGlobalRootCA.crt.pem https://filedn.com/lvxzpqbRuTkLnAjfFXe7FFu/Gazetteer%20DB/azure-mysql-DigiCertGlobalRootCA.crt.pem
 
 # set back to main dir
 WORKDIR /app

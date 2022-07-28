@@ -4,6 +4,7 @@ django==3.2.*
 whitenoise==5.2.0
 gunicorn==20.0.4
 #psycopg2==2.8
+pymysql
 dj-database-url
 python-decouple
 

@@ -35,12 +35,44 @@ def detect_toponyms(url, text_options=None, toponym_options=None):
     results = {'image':iminfo, 'toponyms':candidate_toponyms}
     return results
 
+class MySqlCoder(object):
+    def __init__(self):
+        import pymysql, pymysql.cursors
+        self.db = pymysql.connect(host=os.environ['GEOCODER_HOST'],
+                                port=os.environ['GEOCODER_PORT'], 
+                                user=os.environ['GEOCODER_USER'],
+                                password=os.environ['GEOCODER_PASSWORD'],
+                                ssl_ca="data/azure-mysql-DigiCertGlobalRootCA.crt.pem", ssl_disabled=False,
+                                database=os.environ['GEOCODER_DATABASE'],
+                                cursorclass=pymysql.cursors.Cursor)
+
+    def geocode(self, name, limit=None, lang=None):
+        if limit:
+            raise NotImplemented("Geocode results 'limit' not yet implemented")
+        _matches = "SELECT * FROM names WHERE name = %s"
+        _select = "sources.name,locs.loc_id,GROUP_CONCAT(names.name SEPARATOR '|'),locs.lon,locs.lat"
+        _from = "sources,locs,names,matches WHERE names.loc_id=matches.loc_id AND names.loc_id=locs.loc_id AND locs.source_id=sources.source_id"
+        _groupby = "locs.loc_id"
+        #_groupby += ",sources.name,locs.lon,locs.lat" # mysql requires specifying all select cols in groupby
+        query = "WITH matches AS ({_matches}) SELECT {_select} FROM {_from} GROUP BY {_groupby}".format(_matches=_matches, _select=_select, _from=_from, _groupby=_groupby)
+        cur = self.db.cursor()
+        cur.execute(query, (name,))
+        results = [{'type': 'Feature',
+                   'properties': {'data':data,
+                                  'id':ID,
+                                  'name':names,
+                                  'search':name,
+                                  },
+                   'geometry': {'type':'Point', 'coordinates':[lon,lat]},
+                   } for data,ID,names,lon,lat in cur]
+        return results
+
 def match_toponyms(toponyms, **match_options):
     import maponyms
 
     # find toponym coordinates
-    db = 'data/gazetteers.db' #r"C:\Users\kimok\Desktop\gazetteers\new\gazetteers.db"
-    matched_toponyms = maponyms.main.match_control_points(toponyms, db=db, **match_options)
+    geocoder = MySqlCoder()
+    matched_toponyms = maponyms.main.match_control_points(toponyms, geocoder=geocoder, **match_options)
 
     # make into control points
     return matched_toponyms
