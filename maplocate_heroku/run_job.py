@@ -6,6 +6,11 @@ import io
 import json
 import traceback
 
+def friendly_url_request(url):
+    from urllib.request import Request
+    headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
+    return Request(url, headers=headers)
+
 def detect_toponyms(url, text_options=None, toponym_options=None):
     # download image to temporary location
     #from urllib.request import urlretrieve
@@ -15,7 +20,8 @@ def detect_toponyms(url, text_options=None, toponym_options=None):
     # open image
     from PIL import Image
     from urllib.request import urlopen
-    fobj = io.BytesIO(urlopen(url).read())
+    req = friendly_url_request(url)
+    fobj = io.BytesIO(urlopen(req).read())
     im = Image.open(fobj)
     print(im)
     w,h = im.size
@@ -42,7 +48,8 @@ class MySqlCoder(object):
                                 port=int(os.environ['GEOCODER_PORT']), 
                                 user=os.environ['GEOCODER_USER'],
                                 password=os.environ['GEOCODER_PASSWORD'],
-                                ssl_ca="data/azure-mysql-DigiCertGlobalRootCA.crt.pem", ssl_disabled=False,
+                                ssl_ca="data/azure-mysql-DigiCertGlobalRootCA.crt.pem", 
+                                ssl_disabled=False,
                                 database=os.environ['GEOCODER_DATABASE'],
                                 cursorclass=pymysql.cursors.Cursor)
 

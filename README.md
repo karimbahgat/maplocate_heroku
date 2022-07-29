@@ -4,9 +4,14 @@
 # Heroku Setup
 
 Requires the following steps when setting up Heroku:
-- heroku postgresql addon
-- heroku-apt buildpack
-- heroku stack 18 (20 has an incompatibility with tesseract, see https://stackoverflow.com/questions/66087588/tesseract-error-while-loading-shared-libraries-libarchive-so-13-python)
-- environment variables:
+- Set the app to run as a docker container rather than a stack:
+  `heroku stack:set container -a appname`
+- Build and deploy from this repo.
+- Environment variables:
   - SECRET_KEY=[random key to use for django]
-  - TESSDATA_PREFIX=/app/.apt/usr/share/tesseract-ocr/4.00/tessdata (determined by browsing the heroku app directories)
+  - DATABASE_URL=sqlite:///db.sqlite3 [so django doesn't complain]
+  - GEOCODER_HOST=...
+  - GEOCODER_PORT=...
+  - GEOCODER_DATABASE=...
+  - GEOCODER_USER=...
+  - GEOCODER_PASSWORD=...
