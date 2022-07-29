@@ -39,7 +39,7 @@ class MySqlCoder(object):
     def __init__(self):
         import pymysql, pymysql.cursors
         self.db = pymysql.connect(host=os.environ['GEOCODER_HOST'],
-                                port=os.environ['GEOCODER_PORT'], 
+                                port=int(os.environ['GEOCODER_PORT']), 
                                 user=os.environ['GEOCODER_USER'],
                                 password=os.environ['GEOCODER_PASSWORD'],
                                 ssl_ca="data/azure-mysql-DigiCertGlobalRootCA.crt.pem", ssl_disabled=False,
