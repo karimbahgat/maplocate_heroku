@@ -13,13 +13,13 @@ def friendly_url_request(url):
 
 def friendly_url_download(url):
     import urllib.request
-    import hashlib
     headers = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)')]
     opener = urllib.request.build_opener()
     opener.addheaders = headers
     urllib.request.install_opener(opener)
-    filename = hashlib.md5(url.encode('utf8')).hexdigest()
-    path,return_headers = urllib.request.urlretrieve(url, filename)
+    #import hashlib
+    #filename = hashlib.md5(url.encode('utf8')).hexdigest()
+    path,return_headers = urllib.request.urlretrieve(url) #, filename)
     fobj = open(path, mode='rb')
     return fobj
 
