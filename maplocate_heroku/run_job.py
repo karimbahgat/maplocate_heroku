@@ -18,7 +18,7 @@ def friendly_url_download(url):
     opener = urllib.request.build_opener()
     opener.addheaders = headers
     urllib.request.install_opener(opener)
-    filename = hashlib.md5(url).hexdigest()
+    filename = hashlib.md5(url.encode('utf8')).hexdigest()
     path,return_headers = urllib.request.urlretrieve(url, filename)
     fobj = open(path, mode='rb')
     return fobj
