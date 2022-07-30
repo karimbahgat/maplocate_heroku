@@ -11,17 +11,22 @@ def friendly_url_request(url):
     headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
     return Request(url, headers=headers)
 
-def detect_toponyms(url, text_options=None, toponym_options=None):
-    # download image to temporary location
-    #from urllib.request import urlretrieve
-    #path = urlretrieve(url)
-    #print(path)
+def friendly_url_download(url):
+    import urllib.request
+    import hashlib
+    headers = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)')]
+    opener = urllib.request.build_opener()
+    opener.addheaders = headers
+    urllib.request.install_opener(opener)
+    filename = hashlib.md5(url).hexdigest()
+    path,return_headers = urllib.request.urlretrieve(url, filename)
+    fobj = open(path, mode='rb')
+    return fobj
 
+def detect_toponyms(url, text_options=None, toponym_options=None):
     # open image
     from PIL import Image
-    from urllib.request import urlopen
-    req = friendly_url_request(url)
-    fobj = io.BytesIO(urlopen(req).read())
+    fobj = friendly_url_download(url) # downloads then opens
     im = Image.open(fobj)
     print(im)
     w,h = im.size
