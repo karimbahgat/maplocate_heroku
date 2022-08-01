@@ -5,6 +5,7 @@ import os
 import io
 import json
 import traceback
+from decouple import config
 
 def friendly_url_request(url):
     from urllib.request import Request
@@ -49,13 +50,13 @@ def detect_toponyms(url, text_options=None, toponym_options=None):
 class MySqlCoder(object):
     def __init__(self):
         import pymysql, pymysql.cursors
-        self.db = pymysql.connect(host=os.environ['GEOCODER_HOST'],
-                                port=int(os.environ['GEOCODER_PORT']), 
-                                user=os.environ['GEOCODER_USER'],
-                                password=os.environ['GEOCODER_PASSWORD'],
+        self.db = pymysql.connect(host=config('GEOCODER_HOST'),
+                                port=config('GEOCODER_PORT', cast=int), 
+                                user=config('GEOCODER_USER'),
+                                password=config('GEOCODER_PASSWORD'),
                                 ssl_ca="data/azure-mysql-DigiCertGlobalRootCA.crt.pem", 
                                 ssl_disabled=False,
-                                database=os.environ['GEOCODER_DATABASE'],
+                                database=config('GEOCODER_DATABASE'),
                                 cursorclass=pymysql.cursors.Cursor)
 
     def geocode(self, name, limit=None, lang=None):
